@@ -1,19 +1,53 @@
 [
   {
-    "name": "Weekly Recap",
+    "name": "Weekly Recap — empty state",
     "steps": [
       {
+        "send": { "callback": "recap:view" },
         "expect": [
-          {
-            "method": "sendMessage",
-            "payload": {
-              "text": "Show weekly summary of habit progress"
-            }
-          }
-        ],
-        "send": {
-          "callback": "recap:view"
-        }
+          { "method": "editMessageText", "payload": { "text": "No habits to recap yet — tap ➕ Create Habit to start tracking." } }
+        ]
+      }
+    ]
+  },
+  {
+    "name": "Weekly Recap — shows summary after creation",
+    "steps": [
+      {
+        "send": { "callback": "habit:create" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "What habit do you want to track?" } }
+        ]
+      },
+      {
+        "send": { "text": "Meditate" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Got it — \"Meditate\". How often?" } }
+        ]
+      },
+      {
+        "send": { "callback": "habit:sched:daily" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "What time should I remind you?" } }
+        ]
+      },
+      {
+        "send": { "callback": "habit:time:08:00" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Confirm your new habit:\n\n📝 Meditate\n🔁 Every day\n⏰ 08:00" } }
+        ]
+      },
+      {
+        "send": { "callback": "habit:create:confirm" },
+        "expect": [
+          { "method": "editMessageText", "payload": { "text": "✅ Habit created!\n\nYou're tracking \"Meditate\" with a reminder at 08:00. Keep it up!" } }
+        ]
+      },
+      {
+        "send": { "callback": "recap:view" },
+        "expect": [
+          { "method": "editMessageText", "payload": { "text": "📊 Weekly recap\n\nMeditate — 0% this week\n· · · · · · ·\n\nOverall: 0% completion this week" } }
+        ]
       }
     ]
   }
