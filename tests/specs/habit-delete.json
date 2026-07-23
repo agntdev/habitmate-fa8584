@@ -1,0 +1,43 @@
+[
+  {
+    "name": "Delete Habit — shows confirmation",
+    "steps": [
+      {
+        "send": { "callback": "habit:create" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "What habit do you want to track?" } }
+        ]
+      },
+      {
+        "send": { "text": "Test" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Got it — \"Test\". How often?" } }
+        ]
+      },
+      {
+        "send": { "callback": "habit:sched:daily" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "What time should I remind you?" } }
+        ]
+      },
+      {
+        "send": { "callback": "habit:time:08:00" },
+        "expect": [
+          { "method": "sendMessage", "payload": { "text": "Confirm your new habit:\n\n📝 Test\n🔁 Every day\n⏰ 08:00" } }
+        ]
+      },
+      {
+        "send": { "callback": "habit:create:confirm" },
+        "expect": [
+          { "method": "editMessageText", "payload": { "text": "✅ Habit created!\n\nYou're tracking \"Test\" with a reminder at 08:00. Keep it up!" } }
+        ]
+      },
+      {
+        "send": { "callback": "habits:view" },
+        "expect": [
+          { "method": "editMessageText", "payload": { "text": "Your habits:\n\nTest — 0 day streak" } }
+        ]
+      }
+    ]
+  }
+]
